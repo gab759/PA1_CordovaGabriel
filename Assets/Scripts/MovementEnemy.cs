@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy1 : MonoBehaviour
+public class MovementEnemy : MonoBehaviour
 {
     [SerializeField] private Vector3 patrolPointA;
     [SerializeField] private Vector3 patrolPointB;

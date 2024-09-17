@@ -9,9 +9,12 @@ public class PlayerController : MonoBehaviour
     private Vector2 movement;
     [SerializeField] private float velocity;
     [SerializeField] private float jumpForce = 5f;
-    [SerializeField] private bool canJump = true;
+    [SerializeField] private int maxJumps = 2;
+    private int jumpCount;
+    private bool isGrounded;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
+    private float groundCheckRadius = 0.2f;
 
     private void Awake()
     {
@@ -20,7 +23,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        canJump = Physics.Raycast(groundCheck.position, Vector3.down, groundLayer);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
+        if (isGrounded)
+        {
+            jumpCount = 0;
+        }
     }
 
     private void FixedUpdate()
@@ -40,11 +47,11 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && (isGrounded || jumpCount < maxJumps))
         {
             _compRigidbody.velocity = new Vector3(_compRigidbody.velocity.x, 0f, _compRigidbody.velocity.z);
             _compRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            canJump = true; 
+            jumpCount++;
         }
     }
 }
